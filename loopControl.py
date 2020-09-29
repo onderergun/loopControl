@@ -7,11 +7,12 @@ def main():
     logs = api.runCmds(1, ["show logging last 3 minutes"],"text" )
     loglines = logs[0]["output"].split('\n')
     loopedinterfaces= []
+    excludedinterfaces = ["Port-Channel1"]
     for line in loglines:
         if "ETH-4-HOST_FLAPPING:" in line:
             linesplit = line.split(" ")
             for word in linesplit:
-                if "Ethernet" in word or "Port-Channel" in word:
+                if ("Ethernet" in word or "Port-Channel" in word) and (word not in excludedinterfaces):
                     loopedinterfaces.append(word)
     commands = []
     for interface in loopedinterfaces:
